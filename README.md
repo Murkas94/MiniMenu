@@ -37,6 +37,8 @@ The library is free to use as the licence defines, but i would still be glad if 
 
 - Note: I am using the default Arduino-Plattform, so the following instructions are made for this plattform. The library could still work with other environments like platform.io.
 
+- Take a look at the [example-sketch](./docs/examples/MiniMenuExample.ino).
+
 - First, checkout the library into `your_arduino_project/src/MiniMenu`
 - Setup your Adafruit-GFX device as usual
 - Create an instance of the MiniMenu anywhere you can access it, giving it the instance of the `Adafruit_GFX` (usualy the display instance):
