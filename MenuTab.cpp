@@ -162,3 +162,18 @@ void MenuTab::Draw(Adafruit_GFX& gfx, const Rect& area)
             gfx.drawFastHLine(area.pos.x, y++, area.size.x, menu.parameters.frameColor);
     }
 }
+
+void MenuTab::RemoveEntry(int16_t index)
+{
+    delete entries[index];
+    entries.erase(entries.begin() + index);
+}
+void MenuTab::ClearEntries()
+{
+    for(MenuEntry* entry : entries){ delete entry; }
+    entries.clear();
+    selectedEntryIndex = -1;
+    firstVisibleEntryIndex = -1;
+    visibleEntryCount = -1;
+}
+
