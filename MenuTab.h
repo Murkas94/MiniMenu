@@ -35,6 +35,7 @@ public:
     void Draw(Adafruit_GFX& gfx, const Rect& area);
 
     inline const int16_t GetSelectedEntryIndex(){ return selectedEntryIndex; }
+    inline void SetSelectedEntryIndex(int16_t index){ selectedEntryIndex = index; }
     inline MenuTab& SetFixedEntryCount(uint8_t count){ fixedEntryCount = count; return *this; }
 
     template<typename SpecificMenuEntry, typename std::enable_if<std::is_base_of<MenuEntry, SpecificMenuEntry>::value, bool>::type = true>

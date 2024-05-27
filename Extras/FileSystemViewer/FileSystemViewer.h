@@ -4,6 +4,7 @@
 #include "../../MiniMenu.h"
 #include "FileSystemAdapter.h"
 #include <functional>
+#include <vector>
 
 namespace MiniMenu
 {
@@ -23,12 +24,13 @@ private:
 
     std::string _currentFolder;
     std::string _currentDir;
+    std::vector<int16_t> _currentDirIndices;
     IFileSystemAdapter::EntryList _dirEntries;
 
     bool EnterDir(const char* const dir);
     bool ExitDir();
 
-    void UpdateEntries();
+    void UpdateEntries(int16_t selectedEntryIndex = -1);
 
 public:
     FileSystemViewer(Adafruit_GFX& gfx, IFileSystemAdapter& fs, const char* const baseDir = nullptr);

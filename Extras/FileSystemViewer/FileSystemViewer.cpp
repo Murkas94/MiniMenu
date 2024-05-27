@@ -43,6 +43,7 @@ void FileSystemViewer::Update(bool forceUpdate)
                     // Dir-Selection was aborted, the menu was possible deleted on the callback, so return.
                     return;
                 }
+                _currentDirIndices.push_back(selectedIndex-1);
                 break;
             case IFileSystemAdapter::EntryType::File:
                 {
@@ -96,15 +97,17 @@ bool FileSystemViewer::ExitDir()
             _currentFolder = _currentDir.substr(slashPos + 1);
         }
     }
+    int16_t dirIndex = _currentDirIndices.back();
+    _currentDirIndices.resize(_currentDirIndices.size()-1);
     DBGSERIAL.printf("Entering Dir: \"%s\" (Folder: \"%s\")\n", _currentDir.c_str(), _currentFolder);
     if(OnDirEntered && !OnDirEntered(_currentDir.c_str())){ return false; }
-    UpdateEntries();
+    UpdateEntries(dirIndex + 1);
     return true;
 }
 
-void FileSystemViewer::UpdateEntries()
+void FileSystemViewer::UpdateEntries(int16_t selectedEntryIndex)
 {
-// Remove old entries
+    // Remove old entries
     _fileListTab.ClearEntries();
     // Get new entries
     _dirEntries = _fileSystemAdapter.GetDirEntries(_currentDir.c_str());
@@ -115,6 +118,10 @@ void FileSystemViewer::UpdateEntries()
     }
     _fileListTab.AddEntry(new GenericValueMenuEntry(_menu, _currentFolder)).SetIsSelectable(false);
     _fileListTab.SetFixedEntryCount(1);
+    if(selectedEntryIndex != -1)
+    {
+        _fileListTab.SetSelectedEntryIndex(selectedEntryIndex);
+    }
     // Create new entries
     for(auto& entry : _dirEntries)
     {
