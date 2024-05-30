@@ -27,6 +27,10 @@ private:
     std::vector<int16_t> _currentDirIndices;
     IFileSystemAdapter::EntryList _dirEntries;
 
+    std::vector<std::string> _validFileExtensions;
+    void FilterDirEntries();
+    bool IsValidFileExt(const std::string& filepath) const;
+
     bool EnterDir(const char* const dir);
     bool ExitDir();
 
@@ -42,6 +46,9 @@ public:
     inline Input::ButtonValue& GetDownInput(){ return _menu.input.down; }
     inline Input::ButtonValue& GetSelectInput(){ return _selectInput; }
     inline Input::ButtonValue& GetBackInput(){ return _backInput; }
+
+    inline void ClearValidFileExtensions(){ _validFileExtensions.clear(); UpdateEntries(); }
+    FileSystemViewer& AddValidFileExtension(std::string ext);
 
     std::function<void(const char* const)> OnFileSelected;
     // Gets called when a dir is entered. When the function returns false, entering gets aborted.

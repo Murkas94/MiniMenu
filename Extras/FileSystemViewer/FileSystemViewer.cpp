@@ -111,6 +111,7 @@ void FileSystemViewer::UpdateEntries(int16_t selectedEntryIndex)
     _fileListTab.ClearEntries();
     // Get new entries
     _dirEntries = _fileSystemAdapter.GetDirEntries(_currentDir.c_str());
+    FilterDirEntries();
     DBGSERIAL.println("Files in dir:");
     if(_dirEntries.empty())
     {
@@ -128,5 +129,75 @@ void FileSystemViewer::UpdateEntries(int16_t selectedEntryIndex)
         // Add entries
         DBGSERIAL.printf("\t%s (%s)\n", std::get<0>(entry).c_str(), (std::get<1>(entry) == IFileSystemAdapter::EntryType::File) ? "File" : "Dir");
         _fileListTab.AddEntry(new GenericValueMenuEntry(_menu, std::get<0>(entry)));
+    }
+}
+
+FileSystemViewer& FileSystemViewer::AddValidFileExtension(std::string ext)
+{
+    // only use chars after last dot
+    size_t dotPos = ext.rfind('.');
+    if(dotPos != std::string::npos)
+    {
+        ext = ext.substr(dotPos + 1);
+    }
+
+    // make lowercase
+    std::transform(ext.begin(), ext.end(), ext.begin(),
+        [](unsigned char c){ return std::tolower(c); });
+
+    // add to file-extensions
+    _validFileExtensions.push_back(ext);
+
+    // update list
+    UpdateEntries();
+
+    return *this;
+}
+
+bool FileSystemViewer::IsValidFileExt(const std::string& filepath) const
+{
+    if(_validFileExtensions.empty()){ return true; }
+
+    // find last dot, only use chars after last dot
+    size_t dotPos = filepath.rfind('.');
+    std::string fileExt;
+    if(dotPos != std::string::npos)
+    {
+        fileExt = filepath.substr(dotPos + 1);
+    }else{
+        fileExt = filepath;
+    }
+    
+    // make lowercase
+    std::transform(fileExt.begin(), fileExt.end(), fileExt.begin(),
+        [](unsigned char c){ return std::tolower(c); });
+
+    // compare with valid extensions
+    for(const std::string& validExt : _validFileExtensions)
+    {
+        if(validExt == fileExt)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void FileSystemViewer::FilterDirEntries()
+{
+    if(_validFileExtensions.empty()){return;}
+    for(auto it = _dirEntries.begin(); it != _dirEntries.end(); )
+    {
+        const IFileSystemAdapter::Entry& entry = *it;
+        if(std::get<1>(entry) == IFileSystemAdapter::EntryType::File)
+        {
+            const std::string& filename = std::get<0>(entry);
+            if(!IsValidFileExt(filename))
+            {
+                it = _dirEntries.erase(it);
+                continue;
+            }
+        }
+        ++it;
     }
 }
