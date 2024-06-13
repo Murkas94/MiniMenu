@@ -4,9 +4,7 @@
 #include "../MenuEntry.h"
 #include "Generics/ValueGetter.h"
 #include "Generics/ValueFormatter.h"
-#include <WString.h>
 #include <type_traits>
-#include <string>
 
 namespace MiniMenu
 {
