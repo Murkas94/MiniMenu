@@ -16,17 +16,29 @@ struct Input
     };
     struct ButtonValue{
         uint32_t lastButtonChange = 0;
+        uint32_t lastButtonDownTime = 0;
+        uint32_t lastButtonPushedTime = 0;
         ButtonState value = ButtonState_Up;
 
-        bool IsPressed() const {return value == ButtonState_Push || value == ButtonState_Down;}
-        bool IsTriggered() const {return value == ButtonState_Push;}
-        uint32_t MillisSinceLastChange(){ return millis() - lastButtonChange; }
+        bool IsPressed() const { return value == ButtonState_Push || value == ButtonState_Down; }
+        bool IsTriggered() const { return value == ButtonState_Push; }
+        bool IsReleased() const { return value == ButtonState_Release; }
+        uint32_t MillisSinceLastChange() const { return millis() - lastButtonChange; }
+        const uint32_t& MillisOfLastPushed() const { return lastButtonPushedTime; }
 
         // Sets the current value (Up/Push/Down/Release)
         void Set(ButtonState value){
             if(this->value != value)
             {
                 lastButtonChange = millis();
+                if((value == ButtonState_Down || value == ButtonState_Push) && this->value != ButtonState_Down && this->value != ButtonState_Push)
+                {
+                    lastButtonDownTime = millis();
+                }
+                if((value == ButtonState_Up || value == ButtonState_Release) && this->value != ButtonState_Up && this->value != ButtonState_Release)
+                {
+                    lastButtonPushedTime = millis() - lastButtonDownTime;
+                }
                 this->value = value;
             }
         }

@@ -1,39 +1,22 @@
 #include "MenuEntry.h"
 #include "MiniMenu.h"
+#include "Util/DrawUtils.h"
 
 using namespace MiniMenu;
 
 void MenuEntry::DrawTextLeft(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text)
 {
-    gfx.setCursor(area.pos.x + 1, area.pos.y + 1);
-    gfx.setTextWrap(false);
-    gfx.setTextColor(color);
-    gfx.setTextSize(1);
-    gfx.print(text);
+    MiniMenu::Utils::DrawTextLeft(gfx, area, color, text);
 }
 
 void MenuEntry::DrawTextRight(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text)
 {
-    gfx.setTextWrap(false);
-    gfx.setTextSize(1);
-    Rect bounds;
-    gfx.getTextBounds(text, area.pos.x, area.pos.y, &bounds.pos.x, &bounds.pos.y, reinterpret_cast<uint16_t*>(&bounds.size.x), reinterpret_cast<uint16_t*>(&bounds.size.y));
-    Rect leftArea = area;
-    leftArea.pos.x += leftArea.size.x - bounds.size.x;
-    //leftArea.size.x = bounds.size.x - 1;
-    DrawTextLeft(gfx, leftArea, color, text);
+    MiniMenu::Utils::DrawTextRight(gfx, area, color, text);
 }
 
 void MenuEntry::DrawTextCenter(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text)
 {
-    gfx.setTextWrap(false);
-    gfx.setTextSize(1);
-    Rect bounds;
-    gfx.getTextBounds(text, area.pos.x, area.pos.y, &bounds.pos.x, &bounds.pos.y, reinterpret_cast<uint16_t*>(&bounds.size.x), reinterpret_cast<uint16_t*>(&bounds.size.y));
-    Rect leftArea = area;
-    leftArea.pos.x += (leftArea.size.x - bounds.size.x) / 2;
-    //leftArea.size.x = bounds.size.x - 1;
-    DrawTextLeft(gfx, leftArea, color, text);
+    MiniMenu::Utils::DrawTextCenter(gfx, area, color, text);
 }
 
 void MenuEntry::DrawTextLeft(Adafruit_GFX& gfx, const Rect& area, bool isSelected, const char* text)

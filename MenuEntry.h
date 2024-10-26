@@ -28,9 +28,9 @@ public:
 protected:
     Menu& menu;
 
-    void DrawTextLeft(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
-    void DrawTextCenter(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
-    void DrawTextRight(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
+    static void DrawTextLeft(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
+    static void DrawTextCenter(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
+    static void DrawTextRight(Adafruit_GFX& gfx, const Rect& area, uint16_t color, const char* text);
 
     void DrawTextLeft(Adafruit_GFX& gfx, const Rect& area, bool isSelected, const char* text);
     void DrawTextCenter(Adafruit_GFX& gfx, const Rect& area, bool isSelected, const char* text);
